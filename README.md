@@ -32,7 +32,7 @@ The projects are read from my public repositories every day, so the lists keep u
 | **Rust** | Backend services: Builders World's gateway and jobs, on Axum and Tokio. | [Builders World](https://github.com/builders-world/builders-world) |
 | **Next.js** | Capsa's web app. | [Capsa](https://github.com/obileonardo/capsa-oss) |
 | **Python** | Scripts and tooling. The pixel animation on my profile is drawn in Python. | [Clepso](https://github.com/obileonardo/clepso), [GitHub profile](https://github.com/obileonardo/obileonardo) |
-| **JavaScript** | Build scripts, including the one that draws my GitHub profile. | [Capsa](https://github.com/obileonardo/capsa-oss), [Builders World](https://github.com/builders-world/builders-world), [GitHub profile](https://github.com/obileonardo/obileonardo) |
+| **JavaScript** | Build scripts, including the one that draws my GitHub profile. | [Capsa](https://github.com/obileonardo/capsa-oss), [Builders World](https://github.com/builders-world/builders-world), [GitHub profile](https://github.com/obileonardo/obileonardo), [Armoury](https://github.com/obileonardo/armoury) |
 | **React** | Interfaces in Capsa's web app. | [Capsa](https://github.com/obileonardo/capsa-oss) |
 | **Ruby** | Homebrew formulas, so the Mac apps install with one command. | [Hearth](https://github.com/obileonardo/hearth-macos), [Clepso](https://github.com/obileonardo/clepso) |
 | **Shell** | Build, release and setup scripts. | [Hearth](https://github.com/obileonardo/hearth-macos), [Clepso](https://github.com/obileonardo/clepso) |
@@ -47,7 +47,7 @@ The projects are read from my public repositories every day, so the lists keep u
 | **Vercel** | Hosting for the web apps and sites. | [Clepso](https://github.com/obileonardo/clepso), [Capsa](https://github.com/obileonardo/capsa-oss), [Builders World](https://github.com/builders-world/builders-world) |
 | **Supabase** | Clepso's backend. | [Clepso](https://github.com/obileonardo/clepso) |
 | **Docker** | Local services: Home Assistant for Hearth, and Builders World's backend. | [Hearth](https://github.com/obileonardo/hearth-macos), [Builders World](https://github.com/builders-world/builders-world) |
-| **GitHub Actions** | Tests, releases, and the workflows that rebuild my GitHub profile and this list. | [Hearth](https://github.com/obileonardo/hearth-macos), [Clepso](https://github.com/obileonardo/clepso), [Capsa](https://github.com/obileonardo/capsa-oss), [Builders World](https://github.com/builders-world/builders-world), [GitHub profile](https://github.com/obileonardo/obileonardo) |
+| **GitHub Actions** | Tests, releases, and the workflows that rebuild my GitHub profile and this list. | [Hearth](https://github.com/obileonardo/hearth-macos), [Clepso](https://github.com/obileonardo/clepso), [Capsa](https://github.com/obileonardo/capsa-oss), [Builders World](https://github.com/builders-world/builders-world), [GitHub profile](https://github.com/obileonardo/obileonardo), [Armoury](https://github.com/obileonardo/armoury) |
 | **Home Assistant** | Hearth is a macOS companion for it. | [Hearth](https://github.com/obileonardo/hearth-macos) |
 | **Homebrew** | How Hearth and Clepso install: a tap for each. | [Hearth](https://github.com/obileonardo/hearth-macos), [Clepso](https://github.com/obileonardo/clepso) |
 | **PostgreSQL** | The databases behind Clepso's backend and Builders World. | [Clepso](https://github.com/obileonardo/clepso), [Builders World](https://github.com/builders-world/builders-world) |
