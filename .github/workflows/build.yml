@@ -7,6 +7,8 @@ on:
   push:
     branches: [main]
     paths: ['tools.json', 'scripts/**', '.github/workflows/build.yml']
+  pull_request:
+    paths: ['tools.json', 'scripts/**', '.github/workflows/build.yml']
   workflow_dispatch:
 
 permissions:
@@ -21,15 +23,19 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
+      - name: Test the matching rules and tools.json
+        run: node --test scripts/build.test.mjs
       - name: Build README.md
+        if: github.event_name != 'pull_request'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node scripts/build.mjs
       - name: Commit changes
+        if: github.event_name != 'pull_request'
         run: |
           if git diff --quiet; then echo "Nothing changed."; exit 0; fi
           git config user.name "github-actions[bot]"

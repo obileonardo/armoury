@@ -17,12 +17,42 @@
 
 import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const TOKEN = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
-if (!TOKEN) throw new Error('Set GITHUB_TOKEN (any token that can read public repositories).');
 const LANG_SHARE = 0.05;
+const FIND_KEYS = ['lang', 'files', 'deps', 'cargo', 'swiftpm', 'topics', 'repoName'];
+const MAX_FEATURED = 17; // the profile shows 17 tools and a "+N more" tile
+
+/** Throws with every problem in tools.json at once, so a bad edit fails with a clear message. */
+export function validate(cfg) {
+  const problems = [];
+  if (!cfg.owner) problems.push('owner is missing');
+  if (!Array.isArray(cfg.kinds) || !cfg.kinds.length) problems.push('kinds must be a non-empty list');
+  if (!Array.isArray(cfg.tools)) problems.push('tools must be a list');
+  const projects = new Set((cfg.projects ?? []).map((p) => p.name));
+  const names = new Set();
+  for (const [i, t] of (cfg.tools ?? []).entries()) {
+    const at = `tools[${i}]${t?.name ? ` (${t.name})` : ''}`;
+    if (!t?.name) problems.push(`${at}: name is missing`);
+    else if (names.has(t.name)) problems.push(`${at}: duplicate name`);
+    names.add(t?.name);
+    if (!cfg.kinds?.includes(t?.kind)) problems.push(`${at}: kind "${t?.kind}" is not one of ${JSON.stringify(cfg.kinds)}`);
+    if (typeof t?.note !== 'string') problems.push(`${at}: note must be a string (it can be empty)`);
+    for (const key of Object.keys(t?.find ?? {})) {
+      if (!FIND_KEYS.includes(key)) problems.push(`${at}: unknown find rule "${key}"`);
+      for (const re of key === 'files' || key === 'repoName' ? t.find[key] : []) {
+        try { new RegExp(re); } catch { problems.push(`${at}: bad pattern ${JSON.stringify(re)}`); }
+      }
+    }
+    for (const name of t?.also ?? []) if (!projects.has(name)) problems.push(`${at}: "also" names "${name}", which is not in projects`);
+  }
+  const featured = (cfg.tools ?? []).filter((t) => t?.featured).length;
+  if (featured > MAX_FEATURED) problems.push(`${featured} tools are featured; the profile shows at most ${MAX_FEATURED}`);
+  if (problems.length) throw new Error(`tools.json:\n  ${problems.join('\n  ')}`);
+  return cfg;
+}
 
 async function gh(url, init = {}) {
   const res = await fetch(url.startsWith('http') ? url : `https://api.github.com/${url}`, {
@@ -59,6 +89,7 @@ async function publicRepos(owner, extra) {
 async function inspect(repo) {
   const branch = repo.defaultBranchRef.name;
   const tree = await gh(`repos/${repo.nameWithOwner}/git/trees/${encodeURIComponent(branch)}?recursive=1`);
+  if (tree.truncated) console.warn(`${repo.nameWithOwner}: GitHub returned only part of the file list, so some tools may be missed.`);
   const paths = tree.tree.filter((n) => n.type === 'blob').map((n) => n.path).filter((p) => !/(^|\/)(node_modules|vendor|\.build)\//.test(p));
   const raw = (p) => fetch(`https://raw.githubusercontent.com/${repo.nameWithOwner}/${branch}/${p}`).then((r) => (r.ok ? r.text() : ''));
   const deps = new Set(), cargo = new Set(), swiftpm = new Set();
@@ -86,7 +117,8 @@ async function inspect(repo) {
   return { name: repo.nameWithOwner, short: repo.name, paths, lang, topics, deps, cargo, swiftpm };
 }
 
-function matches(find, r) {
+/** Whether a repository (as `inspect` describes it) meets any of a tool's `find` rules. */
+export function matches(find, r) {
   if (!find) return false;
   const any = (list, test) => (list ?? []).some(test);
   return any(find.lang, (l) => r.lang.has(l))
@@ -101,7 +133,8 @@ function matches(find, r) {
 const esc = (s) => String(s).replace(/\|/g, '\\|');
 
 async function main() {
-  const cfg = JSON.parse(await readFile(path.join(ROOT, 'tools.json'), 'utf8'));
+  if (!TOKEN) throw new Error('Set GITHUB_TOKEN (any token that can read public repositories).');
+  const cfg = validate(JSON.parse(await readFile(path.join(ROOT, 'tools.json'), 'utf8')));
   const listed = cfg.projects.flatMap((p) => p.repos ?? []);
   const repos = await publicRepos(cfg.owner, listed.filter((r) => !r.startsWith(`${cfg.owner}/`)));
   const seen = await Promise.all(repos.map(inspect));
@@ -137,12 +170,22 @@ The tools I work with, how I use each one, and the public projects it is in. ${c
 The projects are read from my public repositories every day, so the lists keep up as I build.
 
 ${sections.join('\n')}
----
+## How this list is built
 
-Edit [tools.json](tools.json) to add a tool or change a note. The projects are found by [scripts/build.mjs](scripts/build.mjs).
+[tools.json](tools.json) holds the tools and the notes. Once a day, [scripts/build.mjs](scripts/build.mjs) reads my public
+repositories (their languages, files, dependencies and topics), matches each tool to the projects that use it, and
+rewrites this page. Private repositories are never read. To run it yourself: \`GITHUB_TOKEN=... node scripts/build.mjs\`.
+
+Spotted something wrong? [Open an issue](https://github.com/${cfg.owner}/armoury/issues).
+
+Tool names and logos belong to their owners; they are named here only to say what I work with.
+The code is under the [MIT License](LICENSE).
 `;
   await writeFile(path.join(ROOT, 'README.md'), readme);
   console.log(`README.md: ${cfg.tools.length} tools across ${seen.length} public repositories.`);
 }
 
-main().catch((err) => { console.error(err.message); process.exit(1); });
+// Run only when executed directly, so the tests can import the helpers.
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch((err) => { console.error(err.message); process.exit(1); });
+}

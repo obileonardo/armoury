@@ -1,0 +1,7 @@
+# Keeps the workflow's pinned actions up to date with a pull request when a new release comes out.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

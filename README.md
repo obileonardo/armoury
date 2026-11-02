@@ -10,16 +10,16 @@ The projects are read from my public repositories every day, so the lists keep u
 | Tool | How I use it | Public projects |
 | --- | --- | --- |
 | **Figma** | Product design since 2019: products, brands and websites. Named a Top Creator at Figma Config 2022. |   |
-| **Illustrator** |   |   |
-| **Photoshop** |   |   |
-| **Framer** |   |   |
+| **Illustrator** | Vector work for brands: logos, icons and illustration. |   |
+| **Photoshop** | Image editing and mock-ups for brand and product work. |   |
+| **Framer** | Websites, designed and published from the canvas. |   |
 
 ## Game & 3D
 
 | Tool | How I use it | Public projects |
 | --- | --- | --- |
-| **Unreal Engine** | Unreal Engine 5: Mazerance, a co-op strategy game. | [Mazerance](https://x.com/Mazerance) |
-| **Blender** |   |   |
+| **Unreal Engine** | Unreal Engine 5: Mazerance, the co-op strategy game at FiveBlooded. | [Mazerance](https://x.com/Mazerance) |
+| **Blender** | 3D models and scenes. |   |
 | **Three.js** | The 3D world in the browser: Builders World's real African cities. | [Builders World](https://github.com/builders-world/builders-world) |
 
 ## Code
@@ -54,6 +54,13 @@ The projects are read from my public repositories every day, so the lists keep u
 | **SQLite** | Local storage in Clepso, through GRDB. | [Clepso](https://github.com/obileonardo/clepso) |
 | **Redis** | Queues and streams in Builders World's backend. | [Builders World](https://github.com/builders-world/builders-world) |
 
----
+## How this list is built
 
-Edit [tools.json](tools.json) to add a tool or change a note. The projects are found by [scripts/build.mjs](scripts/build.mjs).
+[tools.json](tools.json) holds the tools and the notes. Once a day, [scripts/build.mjs](scripts/build.mjs) reads my public
+repositories (their languages, files, dependencies and topics), matches each tool to the projects that use it, and
+rewrites this page. Private repositories are never read. To run it yourself: `GITHUB_TOKEN=... node scripts/build.mjs`.
+
+Spotted something wrong? [Open an issue](https://github.com/obileonardo/armoury/issues).
+
+Tool names and logos belong to their owners; they are named here only to say what I work with.
+The code is under the [MIT License](LICENSE).

@@ -13,13 +13,13 @@
   "tools": [
     { "name": "Figma", "kind": "design", "icon": "figma", "featured": true,
       "note": "Product design since 2019: products, brands and websites. Named a Top Creator at Figma Config 2022." },
-    { "name": "Illustrator", "kind": "design", "icon": { "mono": "Ai" }, "featured": true, "note": "" },
-    { "name": "Photoshop", "kind": "design", "icon": { "mono": "Ps" }, "featured": true, "note": "" },
-    { "name": "Framer", "kind": "design", "icon": "framer", "featured": true, "note": "" },
+    { "name": "Illustrator", "kind": "design", "icon": { "mono": "Ai" }, "featured": true, "note": "Vector work for brands: logos, icons and illustration." },
+    { "name": "Photoshop", "kind": "design", "icon": { "mono": "Ps" }, "featured": true, "note": "Image editing and mock-ups for brand and product work." },
+    { "name": "Framer", "kind": "design", "icon": "framer", "featured": true, "note": "Websites, designed and published from the canvas." },
 
     { "name": "Unreal Engine", "kind": "game & 3D", "icon": "unrealengine", "featured": true,
-      "note": "Unreal Engine 5: Mazerance, a co-op strategy game.", "also": ["Mazerance"] },
-    { "name": "Blender", "kind": "game & 3D", "icon": "blender", "featured": true, "note": "" },
+      "note": "Unreal Engine 5: Mazerance, the co-op strategy game at FiveBlooded.", "also": ["Mazerance"] },
+    { "name": "Blender", "kind": "game & 3D", "icon": "blender", "featured": true, "note": "3D models and scenes." },
     { "name": "Three.js", "kind": "game & 3D", "icon": "threedotjs", "featured": true,
       "note": "The 3D world in the browser: Builders World's real African cities.", "find": { "deps": ["three"] } },
 
