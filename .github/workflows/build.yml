@@ -1,0 +1,39 @@
+name: Build the armoury
+
+# Every day, read my public repositories again and rewrite README.md, so each tool's projects stay current.
+on:
+  schedule:
+    - cron: '23 5 * * *' # daily, 05:23 UTC
+  push:
+    branches: [main]
+    paths: ['tools.json', 'scripts/**', '.github/workflows/build.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build README.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/build.mjs
+      - name: Commit changes
+        run: |
+          if git diff --quiet; then echo "Nothing changed."; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898299+github-actions[bot]@users.noreply.github.com"
+          git commit -am "Refresh the armoury"
+          git pull --rebase
+          git push
